@@ -31,6 +31,31 @@ app.get('/transactions', (req, res) => {
     res.send(`Transactions for category: ${category}`)
 })
 
+// route-specific middleware
+const authenticate = (req, res, next) => {
+    const apiKey = req.headers['x-api-key']
+    if (apiKey === 'secret') {
+        next()
+    } else {
+        res.status(401).send('Unauthorized')
+    }
+}
+
+app.get('/protected', authenticate, (req, res) => {
+    res.send('Proctected resource')
+})
+
+// built-in middleware for parsing json
+app.use(express.json())
+
+// built-in middleware for parsing URL-encoded data
+app.use(express.urlencoded({ extended: true }))
+
+app.post('/data', (req, res) => {
+    console.log(req.body)
+    res.send('Data received.')
+})
+
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`)
 })
