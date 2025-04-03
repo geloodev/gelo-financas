@@ -1,0 +1,80 @@
+// schema.prisma
+datasource db {
+    provider = "sqlite"
+    url = "file:./dev.db"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model User {
+    id              String      @id @default(uuid())
+    username        String      @unique
+    email           String      @unique
+    password        String
+    name            String
+    createdAt       DateTime    @default(now())
+    accounts        Account[]
+    transactions    Transaction[]
+    categories      Category[]
+    cards           Card[]
+}
+
+model Bank {
+    id          String      @id @default(uuid())
+    name        String
+    logoUrl     String?
+    accounts    Account[]
+}
+
+model Account {
+    id              String      @id @default(uuid())
+    name            String
+    balance         Float       @default(0)
+    userId          String
+    user            User        @relation(fields: [userId], references: [id])
+    bankId          String?
+    bank            Bank?       @relation(fields: [bankId], references: [id])
+    cards           Card[]
+    transactions    Transaction[]
+}
+
+model Category {
+    id              String          @id @default(uuid())
+    name            String
+    type            String
+    color           String
+    userId          String
+    user            User            @relation(fields: [userId], references: [id])
+    transactions    Transaction[]
+}
+
+model Transaction {
+    id              String          @id @default(uuid())
+    amount          Float
+    date            DateTime        @default(now())
+    description     String?
+    recurring       Boolean         @default(false)
+    userId          String
+    user            User            @relation(fields: [userId], references: [id])
+    accountId       String
+    account         Account         @relation(fields: [accountId], references: [id])
+    categoryId      String?
+    category        Category?       @relation(fields: [categoryId], references: [id])        
+    cardId          String?
+    card            Card?           @relation(fields: [cardId], references: [id])
+}
+
+model Card {
+    id              String          @id @default(uuid())
+    name            String
+    limit           Float
+    closingDay      Int
+    dueDay          Int
+    userId          String
+    user            User            @relation(fields: [userId], references: [id])
+    accountId       String
+    account         Account         @relation(fields: [accountId], references: [id])
+    transactions    Transaction[]
+}

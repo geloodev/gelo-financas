@@ -53,3 +53,5 @@ coverage/
 # Build files
 dist/
 build/
+
+generated/prisma
