@@ -11,49 +11,16 @@ app.get('/', (req, res) => {
     res.send('Hello, Finance App Backend!')
 })
 
-app.get('/users', (req, res) => {
-    res.json({ users: [{ id: 1, name: 'John Doe' }, { id: 2, name: 'Jane Smith' }] })
-})
-
-// route params
-app.get('/users/:id', (req, res) => {
-    const userId = req.params.id;
-    res.send(`User ID: ${userId}`)
-})
-
-app.post('/transactions', (req, res) => {
-    res.send('Transaction created sucessfully')
-})
-
-// query params
-app.get('/transactions', (req, res) => {
-    const category = req.query.category;
-    res.send(`Transactions for category: ${category}`)
-})
-
-// route-specific middleware
-const authenticate = (req, res, next) => {
-    const apiKey = req.headers['x-api-key']
-    if (apiKey === 'secret') {
-        next()
-    } else {
-        res.status(401).send('Unauthorized')
-    }
-}
-
-app.get('/protected', authenticate, (req, res) => {
-    res.send('Proctected resource')
-})
-
-// built-in middleware for parsing json
-app.use(express.json())
-
-// built-in middleware for parsing URL-encoded data
-app.use(express.urlencoded({ extended: true }))
-
-app.post('/data', (req, res) => {
-    console.log(req.body)
-    res.send('Data received.')
+// activity 01
+app.get('/stocks', (req, res) => {
+    res.json({
+        stocks: [
+            { id: 1, symbol: 'STK1', name: 'Stock 1', price: 1.00 },
+            { id: 2, symbol: 'STK2', name: 'Stock 2', price: 2.00 },
+            { id: 3, symbol: 'STK3', name: 'Stock 3', price: 3.00 },
+            { id: 4, symbol: 'STK4', name: 'Stock 4', price: 4.00 }
+        ]
+    })
 })
 
 app.listen(port, () => {
